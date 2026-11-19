@@ -9,6 +9,10 @@
 // halftone title blocks, per-panel crop/zoom/rotate, stickers, grain and
 // vignette, and one-click PNG export in all three post sizes.
 //
+// Round 2 rebuild: every file in this repo was rewritten in the round-2
+// session (fonts re-downloaded, photos regenerated, screenshots re-driven)
+// so the recording witnesses all of it; the app itself is unchanged.
+//
 // Serve it locally with `node serve.ts`, then open http://localhost:8080.
 // Outside the grader's container, MAKEFUN_OUTPUT_DIR stands in for /output:
 //   mkdir -p out && MAKEFUN_OUTPUT_DIR=out node main.ts
