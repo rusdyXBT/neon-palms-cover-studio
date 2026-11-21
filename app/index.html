@@ -11,7 +11,7 @@
   <aside class="controls" id="controls">
     <header>
       <h1>NEON PALMS</h1>
-      <p class="tag">Cover Studio — photo + caption, poster art out.</p>
+      <p class="tag">Cover Studio — photo + caption, poster art out. Round 3: Vice Dusk.</p>
     </header>
 
     <section>
@@ -26,6 +26,10 @@
     <section>
       <h2>2 · Layout</h2>
       <div class="pills" id="layoutPills"></div>
+      <div class="row">
+        <button id="cycleLayoutBtn" type="button">Next layout →</button>
+      </div>
+      <p class="hint">[ / ] cycle layouts · G cycles grades · arrows nudge the panel</p>
     </section>
 
     <section>
@@ -39,21 +43,25 @@
     <section>
       <h2>4 · Lettering</h2>
       <label>Title <input id="titleInput" type="text" maxlength="24" value="NEON PALMS"></label>
-      <label>Subtitle <input id="subtitleInput" type="text" maxlength="48" value="golden hour in Neon Bay"></label>
+      <label>Subtitle <input id="subtitleInput" type="text" maxlength="48" value="dusk falls on Neon Bay"></label>
       <label>Badge <input id="badgeInput" type="text" maxlength="28" value="EST. 2026 · NEON BAY"></label>
-      <label>Tagline <input id="taglineInput" type="text" maxlength="48" value="ONE CITY. EVERY SUNSET A STAGE."></label>
-      <label>Heat <input id="heatInput" type="range" min="0" max="5" step="1" value="4"></label>
+      <label>Tagline <input id="taglineInput" type="text" maxlength="48" value="EVERY STREET IS A STAGE"></label>
+      <label>Ribbon <input id="ribbonInput" type="text" maxlength="28" value="VICE DUSK · 2026"></label>
+      <label>Heat <span id="heatValue">5 / 5</span>
+        <input id="heatInput" type="range" min="0" max="5" step="1" value="5">
+      </label>
     </section>
 
     <section>
       <h2>5 · Selected panel</h2>
-      <p class="hint" id="panelLabel">Panel 1 — drag to pan · zoom / rotate below</p>
+      <p class="hint" id="panelLabel">Panel 1 — drag to pan · arrows nudge · zoom / rotate below</p>
       <label>Zoom <input id="zoomSlider" type="range" min="1" max="2.5" step="0.01" value="1"></label>
       <label>Rotate <input id="rotateSlider" type="range" min="-30" max="30" step="1" value="0"></label>
+      <label>Snapshot caption <input id="captionInput" type="text" maxlength="24" placeholder="e.g. GOLDEN HOUR"></label>
       <div class="row">
         <button id="flipBtn" type="button">Flip</button>
-        <button id="undoBtn" type="button">Undo</button>
-        <button id="redoBtn" type="button">Redo</button>
+        <button id="undoBtn" type="button">Undo (0)</button>
+        <button id="redoBtn" type="button">Redo (0)</button>
         <button id="randomBtn" type="button">Surprise me</button>
       </div>
     </section>
@@ -65,7 +73,12 @@
       <label class="check"><input id="halftoneToggle" type="checkbox" checked> Halftone title</label>
       <label class="check"><input id="stickersToggle" type="checkbox" checked> Stickers</label>
       <button id="exportBtn" type="button" class="export">Export all sizes — PNG</button>
-      <p class="sizes">1080×1080 · 1080×1350 · 1920×1080, one click.</p>
+      <p class="sizes">1080×1080 · 1080×1350 · 1920×1080 · 1080×1920, one click.</p>
+      <div class="row">
+        <button id="savePresetBtn" type="button">Save preset</button>
+        <button id="loadPresetBtn" type="button">Load preset</button>
+        <button id="resetBtn" type="button">Reset</button>
+      </div>
       <p id="status" role="status"></p>
     </section>
   </aside>

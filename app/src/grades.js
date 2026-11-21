@@ -1,19 +1,30 @@
-// Gradient-map grades for NEON PALMS: each grade maps a photo's luminance
-// through a sunset/neon colour ramp, then blends back toward the original
-// so faces and chrome keep their colour. All math is plain canvas ImageData.
+// Gradient-map grades for NEON PALMS round 3: each grade maps a photo's
+// luminance through a sunset/neon colour ramp, then blends back toward the
+// original so faces and chrome keep their colour. All math is plain canvas
+// ImageData.
+//
+// Round 3: two new grades — Vice Dusk (the house grade: magenta dusk sky
+// over teal shadows, gold highlights; the round-3 default) and Boulevard
+// Pink (hot pink shadows, warm amber mids). Every grade now carries a
+// one-line `desc` shown as a tooltip on its pill, and the LUT
+// interpolates with a smoothstep so ramps have no visible banding.
 
 export const GRADES = [
-  { id: 'vice-sunset', name: 'Vice Sunset', strength: 0.72,
+  { id: 'vice-dusk', name: 'Vice Dusk', strength: 0.74, desc: 'Magenta dusk, teal shadows, gold highlights — the house grade.',
+    stops: [[0, '#12041f'], [0.26, '#3d0f4d'], [0.52, '#c22a72'], [0.78, '#ff8a3d'], [1, '#ffd166']] },
+  { id: 'boulevard-pink', name: 'Boulevard Pink', strength: 0.70, desc: 'Hot pink shadows, warm amber mids, cream highlights.',
+    stops: [[0, '#1c0418'], [0.3, '#7a1e6e'], [0.55, '#ff2e88'], [0.8, '#ffb347'], [1, '#fff3c4']] },
+  { id: 'vice-sunset', name: 'Vice Sunset', strength: 0.72, desc: 'The original sunset ramp: plum shadows to gold.',
     stops: [[0, '#1b0b2e'], [0.28, '#7a1e6e'], [0.55, '#e8446b'], [0.78, '#ff8a3d'], [1, '#ffd166']] },
-  { id: 'neon-nights', name: 'Neon Nights', strength: 0.78,
+  { id: 'neon-nights', name: 'Neon Nights', strength: 0.78, desc: 'Violet and hot pink with a cyan lift in the highlights.',
     stops: [[0, '#050914'], [0.3, '#7b2ff7'], [0.55, '#ff2e88'], [0.8, '#22e6d6'], [1, '#eafffb']] },
-  { id: 'golden-hour', name: 'Golden Hour', strength: 0.62,
+  { id: 'golden-hour', name: 'Golden Hour', strength: 0.62, desc: 'Warm amber wash, gentle on skin tones.',
     stops: [[0, '#241208'], [0.3, '#7a3b12'], [0.55, '#d97b2b'], [0.8, '#ffb347'], [1, '#fff3c4']] },
-  { id: 'palm-noir', name: 'Palm Noir', strength: 0.85,
+  { id: 'palm-noir', name: 'Palm Noir', strength: 0.85, desc: 'High-contrast black and white for a noir poster.',
     stops: [[0, '#000000'], [0.35, '#232323'], [0.6, '#8a8a8a'], [0.85, '#e8e8e8'], [1, '#ffffff']] },
-  { id: 'heat-haze', name: 'Heat Haze', strength: 0.66,
+  { id: 'heat-haze', name: 'Heat Haze', strength: 0.66, desc: 'Dusky violet into hazy orange, soft and warm.',
     stops: [[0, '#12041f'], [0.3, '#5b1a5e'], [0.55, '#c94b6d'], [0.8, '#ff9e57'], [1, '#fff0a8']] },
-  { id: 'dusk-purple', name: 'Dusk Purple', strength: 0.74,
+  { id: 'dusk-purple', name: 'Dusk Purple', strength: 0.74, desc: 'Deep purple dusk with pink highlights.',
     stops: [[0, '#0a0618'], [0.3, '#3d1a6e'], [0.55, '#8b2fb8'], [0.8, '#e86aa8'], [1, '#ffe3f2']] },
 ];
 
@@ -21,9 +32,23 @@ export function gradeById(id) {
   return GRADES.find((g) => g.id === id) || GRADES[0];
 }
 
+/** Just the grade ids, in pill order. */
+export function listGradeIds() {
+  return GRADES.map((g) => g.id);
+}
+
+/** Just the grade names, in pill order. */
+export function gradeNames() {
+  return GRADES.map((g) => g.name);
+}
+
 function hexToRgb(hex) {
   const n = parseInt(hex.slice(1), 16);
   return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+}
+
+function smoothstep(t) {
+  return t * t * (3 - 2 * t);
 }
 
 function buildLut(grade) {
@@ -36,7 +61,7 @@ function buildLut(grade) {
       if (t >= stops[s][0] && t <= stops[s + 1][0]) { a = stops[s]; b = stops[s + 1]; break; }
     }
     const span = b[0] - a[0] || 1;
-    const k = Math.max(0, Math.min(1, (t - a[0]) / span));
+    const k = smoothstep(Math.max(0, Math.min(1, (t - a[0]) / span)));
     for (let c = 0; c < 3; c++) lut[i * 3 + c] = Math.round(a[1][c] + (b[1][c] - a[1][c]) * k);
   }
   return lut;

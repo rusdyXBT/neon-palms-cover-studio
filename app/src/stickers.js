@@ -1,5 +1,11 @@
-// Own vector stickers for NEON PALMS: a palm tree, a setting sun and a
-// flamingo, drawn with plain canvas paths. No clip art, no borrowed art.
+// Own vector stickers for NEON PALMS round 3: a palm tree, a setting sun,
+// a flamingo, a star and a wave, drawn with plain canvas paths. No clip
+// art, no borrowed art.
+//
+// Round 3: drawBadgeRays (radiating rays behind the badge starburst),
+// drawStar (four-point sparkle) and drawWave (a small surf wave) are new,
+// and the title-band sticker row now ends with a flamingo on the left and
+// sparkles scattered along the band.
 
 /** Draw a palm silhouette centred at (cx, cy) with trunk height h. */
 export function drawPalm(ctx, cx, cy, h, color = '#0d1b1e') {
@@ -90,10 +96,67 @@ export function drawFlamingo(ctx, cx, cy, h, color = '#ff5e8a') {
   ctx.restore();
 }
 
-/** Sticker accents along the title band: a striped sun far left (clear of
- *  the title) and a palm at the right edge, behind the badge. */
+/** Four-point sparkle star, for scattering along the title band. */
+export function drawStar(ctx, cx, cy, r, color = '#ffd166') {
+  ctx.save();
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  ctx.moveTo(cx, cy - r);
+  ctx.quadraticCurveTo(cx, cy, cx + r, cy);
+  ctx.quadraticCurveTo(cx, cy, cx, cy + r);
+  ctx.quadraticCurveTo(cx, cy, cx - r, cy);
+  ctx.quadraticCurveTo(cx, cy, cx, cy - r);
+  ctx.fill();
+  ctx.restore();
+}
+
+/** A small surf wave: two stacked arcs with a foam crest. */
+export function drawWave(ctx, cx, cy, w, color = '#22e6d6') {
+  ctx.save();
+  ctx.strokeStyle = color;
+  ctx.lineWidth = Math.max(2, w * 0.08);
+  ctx.lineCap = 'round';
+  ctx.beginPath();
+  ctx.moveTo(cx - w / 2, cy);
+  ctx.quadraticCurveTo(cx - w * 0.2, cy - w * 0.3, cx + w * 0.15, cy - w * 0.12);
+  ctx.quadraticCurveTo(cx + w * 0.35, cy, cx + w / 2, cy - w * 0.18);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(cx - w * 0.35, cy + w * 0.16);
+  ctx.quadraticCurveTo(cx, cy + w * 0.02, cx + w * 0.4, cy + w * 0.12);
+  ctx.stroke();
+  ctx.restore();
+}
+
+/** Radiating rays behind the badge starburst, alternating long/short. */
+export function drawBadgeRays(ctx, cx, cy, rOuter, rInner, color = '#ffd166') {
+  ctx.save();
+  ctx.strokeStyle = color;
+  ctx.globalAlpha = 0.55;
+  ctx.lineWidth = Math.max(2, rOuter * 0.03);
+  ctx.lineCap = 'round';
+  const rays = 12;
+  for (let i = 0; i < rays; i++) {
+    const a = (i / rays) * Math.PI * 2;
+    const r1 = rInner;
+    const r2 = i % 2 === 0 ? rOuter : (rOuter + rInner) / 2;
+    ctx.beginPath();
+    ctx.moveTo(cx + Math.cos(a) * r1, cy + Math.sin(a) * r1);
+    ctx.lineTo(cx + Math.cos(a) * r2, cy + Math.sin(a) * r2);
+    ctx.stroke();
+  }
+  ctx.restore();
+}
+
+/** Sticker accents along the title band: a striped sun far left, a
+ *  flamingo low-left, a palm at the right edge behind the badge, and
+ *  sparkles scattered between title and badge. */
 export function drawStickerRow(ctx, W, bandY, bandH) {
   const s = bandH * 0.62;
   drawSun(ctx, W * 0.018, bandY + bandH * 0.30, bandH * 0.17);
+  drawFlamingo(ctx, W * 0.055, bandY + bandH * 0.92, bandH * 0.34, '#ff5e8a');
   drawPalm(ctx, W * 0.975, bandY + bandH * 0.95, s * 1.05, '#0d1b1e');
+  drawStar(ctx, W * 0.62, bandY + bandH * 0.18, bandH * 0.05);
+  drawStar(ctx, W * 0.68, bandY + bandH * 0.78, bandH * 0.035);
+  drawWave(ctx, W * 0.72, bandY + bandH * 0.85, bandH * 0.22);
 }
